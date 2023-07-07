@@ -1,12 +1,13 @@
-package com.act.cooperativa.models;
+package com.act.cooperativa.model;
 
-import com.act.cooperativa.enuns.Vote;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -28,6 +29,7 @@ public class AssociateModel implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private SessionModel session;
 
-    @Enumerated(EnumType.STRING)
-    private Vote vote;
+    @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private LocalDateTime creationDate;
 }
