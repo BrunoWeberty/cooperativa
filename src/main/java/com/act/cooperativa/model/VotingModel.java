@@ -38,4 +38,8 @@ public class VotingModel implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<VoteModel> votes;
+
+    public boolean votingIsAvailable() {
+        return initPeriod.isBefore(LocalDateTime.now());
+    }
 }

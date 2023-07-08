@@ -75,6 +75,17 @@ public class VotingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Session Not Found");
         }
 
+        Optional<VotingModel> votingModelOptional = votingService.findById(sessionModelOptional.get().getVotingId());
+        if (votingModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Voting Not Found");
+        }
+
+        var voting = votingModelOptional.get();
+
+        if(voting.votingIsAvailable()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Voting for this session is now closed.");
+        }
+
         var associates = sessionModelOptional.get().getAssociates();
         var associate = associates.stream().filter(a -> a.getAssociateId().equals(associateId)).findAny();
 
@@ -82,12 +93,7 @@ public class VotingController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The associate can only vote if he is registered in the session.");
         }
 
-        Optional<VotingModel> votingModelOptional = votingService.findById(sessionModelOptional.get().getVotingId());
-        if (votingModelOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Voting Not Found");
-        }
 
-        var voting = votingModelOptional.get();
 
         var votes = votingModelOptional.get().getVotes();
         var vote = votes.stream().filter(v -> v.getAssociateId().equals(associateId)).findAny();
