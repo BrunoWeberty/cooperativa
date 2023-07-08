@@ -8,6 +8,7 @@ import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "TB_SESSIONS")
 public class SessionModel implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -34,7 +37,7 @@ public class SessionModel implements Serializable {
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "session", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<AssociateModel> associates;
 
