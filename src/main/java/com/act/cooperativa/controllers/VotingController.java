@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -107,10 +108,14 @@ public class VotingController {
         }
 
         var votes = votingModelOptional.get().getVotes();
-        var vote = votes.stream().filter(v -> v.getAssociateId().equals(associateId)).findAny();
+        if(Objects.nonNull(votes)) {
+            var vote = votes.stream().filter(v -> v.getAssociateId().equals(associateId)).findAny();
 
-        if (vote.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("This associate has already voted in this session.");
+            if (vote.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("This associate has already voted in this session.");
+            }
+        } else {
+            votes = new ArrayList<>();
         }
 
         var voteModel = new VoteModel();

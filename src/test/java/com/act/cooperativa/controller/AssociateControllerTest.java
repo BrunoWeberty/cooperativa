@@ -33,7 +33,7 @@ public class AssociateControllerTest {
     AssociateRepository associateRepository;
 
     @Test
-    void getAllAssociates() throws Exception {
+    void getAllAssociatesWithSuccess() throws Exception {
         var associate = new AssociateModel();
         associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
         associate.setName("José");
@@ -46,7 +46,7 @@ public class AssociateControllerTest {
     }
 
     @Test
-    void getAssociate() throws Exception {
+    void getAssociateWithSuccess() throws Exception {
         var associate = new AssociateModel();
         associate.setAssociateId(UUID.fromString("fd82c6f2-8032-4800-b2d4-3a8fc26c3721"));
         associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
@@ -60,7 +60,7 @@ public class AssociateControllerTest {
     }
 
     @Test
-    void saveAssociate() throws Exception {
+    void saveAssociateWithSuccess() throws Exception {
         var associate = new AssociateModel();
         associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
         associate.setName("José");
