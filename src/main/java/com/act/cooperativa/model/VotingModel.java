@@ -32,6 +32,10 @@ public class VotingModel implements Serializable {
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private LocalDateTime endPeriod;
+
+    @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -40,6 +44,10 @@ public class VotingModel implements Serializable {
     private List<VoteModel> votes;
 
     public boolean votingIsAvailable() {
-        return initPeriod.isBefore(LocalDateTime.now());
+        return initPeriod.isAfter(LocalDateTime.now());
+    }
+
+    public boolean votingIsOver() {
+        return endPeriod.isBefore(LocalDateTime.now());
     }
 }

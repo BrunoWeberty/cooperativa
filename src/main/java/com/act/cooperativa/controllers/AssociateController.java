@@ -1,10 +1,10 @@
 package com.act.cooperativa.controllers;
 
 import com.act.cooperativa.dtos.AssociateDto;
-import com.act.cooperativa.dtos.SessionDto;
 import com.act.cooperativa.model.AssociateModel;
-import com.act.cooperativa.model.SessionModel;
 import com.act.cooperativa.services.AssociateService;
+import com.act.cooperativa.services.exception.GetException;
+import com.act.cooperativa.services.exception.ServiceException;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -28,7 +28,7 @@ public class AssociateController {
     AssociateService associateService;
 
     @PostMapping
-    public ResponseEntity<Object> saveAssociate(@RequestBody @Valid AssociateDto associateDto) {
+    public ResponseEntity<Object> saveAssociate(@RequestBody @Valid AssociateDto associateDto) throws ServiceException {
         log.debug("POST saveAssociate associateDto received {}", associateDto.toString());
         var associateModel = new AssociateModel();
         BeanUtils.copyProperties(associateDto, associateModel);
@@ -40,12 +40,12 @@ public class AssociateController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllAssociates() {
+    public ResponseEntity<Object> getAllAssociates() throws GetException {
         return ResponseEntity.status(HttpStatus.OK).body(associateService.findAll());
     }
 
     @GetMapping("/{associateId}")
-    public ResponseEntity<Object> getOneAssociate(@PathVariable(value = "associateId") UUID associateId) {
+    public ResponseEntity<Object> getOneAssociate(@PathVariable(value = "associateId") UUID associateId) throws GetException {
         Optional<AssociateModel> associateModelOptional = associateService.findById(associateId);
         return associateModelOptional.<ResponseEntity<Object>>map(
                 associateModel -> ResponseEntity.status(HttpStatus.OK).body(associateModel)

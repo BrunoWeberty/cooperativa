@@ -5,6 +5,8 @@ import com.act.cooperativa.model.AssociateModel;
 import com.act.cooperativa.model.SessionModel;
 import com.act.cooperativa.services.AssociateService;
 import com.act.cooperativa.services.SessionService;
+import com.act.cooperativa.services.exception.GetException;
+import com.act.cooperativa.services.exception.SaveException;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +34,7 @@ public class SessionController {
 
     @PostMapping("/{sessionId}/associate/{associateId}")
     public ResponseEntity<Object> saveAssociateIntoSession(@PathVariable(value = "sessionId") UUID sessionId,
-                                                           @PathVariable(value = "associateId") UUID associateId) {
+                                                           @PathVariable(value = "associateId") UUID associateId) throws GetException, SaveException {
         Optional<SessionModel> sessionModelOptional = sessionService.findById(sessionId);
         if (sessionModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Session Not Found");
@@ -63,7 +65,7 @@ public class SessionController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveSession(@RequestBody @Valid SessionDto sessionDto) {
+    public ResponseEntity<Object> saveSession(@RequestBody @Valid SessionDto sessionDto) throws SaveException {
         log.debug("POST saveSession sessionDto received {}", sessionDto.toString());
         var sessionModel = new SessionModel();
         BeanUtils.copyProperties(sessionDto, sessionModel);
@@ -75,12 +77,12 @@ public class SessionController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllSessions() {
+    public ResponseEntity<Object> getAllSessions() throws GetException {
         return ResponseEntity.status(HttpStatus.OK).body(sessionService.findAll());
     }
 
     @GetMapping("/{sessionId}")
-    public ResponseEntity<Object> getOneSession(@PathVariable(value = "sessionId") UUID sessionId) {
+    public ResponseEntity<Object> getOneSession(@PathVariable(value = "sessionId") UUID sessionId) throws GetException {
         Optional<SessionModel> sessionModelOptional = sessionService.findById(sessionId);
         return sessionModelOptional.<ResponseEntity<Object>>map(
                 sessionModel -> ResponseEntity.status(HttpStatus.OK).body(sessionModel)

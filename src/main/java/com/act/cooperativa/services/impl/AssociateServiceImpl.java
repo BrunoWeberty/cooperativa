@@ -3,6 +3,8 @@ package com.act.cooperativa.services.impl;
 import com.act.cooperativa.model.AssociateModel;
 import com.act.cooperativa.repositories.AssociateRepository;
 import com.act.cooperativa.services.AssociateService;
+import com.act.cooperativa.services.exception.GetException;
+import com.act.cooperativa.services.exception.SaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +19,30 @@ public class AssociateServiceImpl implements AssociateService {
     AssociateRepository associateRepository;
 
     @Override
-    public AssociateModel save(AssociateModel associateModel) {
-        return associateRepository.save(associateModel);
+    public AssociateModel save(AssociateModel associateModel) throws SaveException {
+        try {
+            return associateRepository.save(associateModel);
+        } catch (Exception e) {
+            throw new SaveException("Error saving associated.", e);
+        }
+
     }
 
     @Override
-    public Optional<AssociateModel> findById(UUID associateId) {
-        return associateRepository.findById(associateId);
+    public Optional<AssociateModel> findById(UUID associateId) throws GetException {
+        try {
+            return associateRepository.findById(associateId);
+        } catch (Exception e) {
+            throw new GetException("Associated fetching error.", e);
+        }
     }
 
     @Override
-    public List<AssociateModel> findAll() {
-        return associateRepository.findAll();
+    public List<AssociateModel> findAll() throws GetException {
+        try {
+            return associateRepository.findAll();
+        } catch (Exception e) {
+            throw new GetException("Error fetching associates.", e);
+        }
     }
-
-
 }
