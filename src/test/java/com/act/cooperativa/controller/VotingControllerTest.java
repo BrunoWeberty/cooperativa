@@ -152,4 +152,42 @@ public class VotingControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    void getCountVotesInVotingOfTheSessionWithSuccess() throws Exception {
+        var associate = new AssociateModel();
+        associate.setAssociateId(UUID.fromString("f7fbfb14-9b5e-4bca-b80a-d4ebd4cedb7f"));
+        associate.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
+        associate.setName("José");
+        associate.setCpf("02069049086");
+
+        var sessionModel = new SessionModel();
+        sessionModel.setName("É a favor do porte de armas?");
+        sessionModel.setSessionId(UUID.fromString("fd82c6f2-8032-4800-b2d4-3a8fc26c3721"));
+        sessionModel.setAssociates(List.of(associate));
+
+        var voting = new VotingModel();
+        voting.setVotingId(UUID.fromString("e2f5a3bf-eb40-4bc9-bd22-4184ef763e97"));
+        voting.setInitPeriod(LocalDateTime.now().minusMinutes(40));
+        voting.setEndPeriod(LocalDateTime.now().plusMinutes(10));
+        voting.setCreationDate(LocalDateTime.now());
+
+        var vote = new VoteModel();
+        vote.setAssociateId(UUID.fromString("f7fbfb14-9b5e-4bca-b80a-d4ebd4cedb7f"));
+        vote.setVote(Vote.YES);
+        vote.setCreationDate(LocalDateTime.now());
+
+        voting.setVotes(List.of(vote));
+
+        Mockito.when(sessionRepository.findById(Mockito.any())).thenReturn(Optional.of(sessionModel));
+        Mockito.when(votingRepository.findById(Mockito.any())).thenReturn(Optional.of(voting));
+        Mockito.when(voteRepository.save(Mockito.any())).thenReturn(vote);
+        Mockito.when(votingRepository.save(Mockito.any())).thenReturn(voting);
+        Mockito.when(sessionRepository.save(Mockito.any())).thenReturn(sessionModel);
+
+        this.mockMvc.perform(get("/sessions/{sessionId}/voting/countVotes", UUID.fromString("fd82c6f2-8032-4800-b2d4-3a8fc26c3721")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"yes\":  1, \"no\": 0}"));
+    }
 }
