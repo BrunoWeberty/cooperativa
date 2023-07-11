@@ -2,6 +2,8 @@ package com.act.cooperativa.controllers;
 
 import com.act.cooperativa.dtos.VoteDto;
 import com.act.cooperativa.dtos.VotingDto;
+import com.act.cooperativa.dtos.VotingResponseDto;
+import com.act.cooperativa.enuns.Vote;
 import com.act.cooperativa.model.SessionModel;
 import com.act.cooperativa.model.VoteModel;
 import com.act.cooperativa.model.VotingModel;
@@ -78,6 +80,36 @@ public class VotingController {
         log.debug("Post saveVoting votingModel saved {}", votingModel.toString());
         log.info("Voting saved successfully {}", votingModel.getVotingId());
         return ResponseEntity.status(HttpStatus.CREATED).body(votingService.save(votingModel, sessionModelOptional.get()));
+    }
+    @GetMapping("/sessions/{sessionId}/voting/countVotes")
+    @Operation(summary = "Conta os votos da votação dentro da pauta e retorna ao solicitante", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorna a contagem de votos da votação da pauta informada"),
+            @ApiResponse(responseCode = "404", description = "Pauta informada não encontrada"),
+            @ApiResponse(responseCode = "404", description = "Votação da pauta informada não encontrada")
+    })
+    public ResponseEntity<Object> getCountVotes(@PathVariable(value = "sessionId") UUID sessionId) throws GetException {
+        Optional<SessionModel> sessionModelOptional = sessionService.findById(sessionId);
+        if (sessionModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Session Not Found");
+        }
+
+        Optional<VotingModel> votingModelOptional = votingService.findById(sessionModelOptional.get().getVotingId());
+        if (votingModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Voting Not Found");
+        }
+
+        var votingResponse = new VotingResponseDto();
+
+        var votes = votingModelOptional.get().getVotes();
+        if (Objects.nonNull(votes)) {
+            votingResponse.setYes(votes.stream().filter(v -> v.getVote().equals(Vote.YES)).count());
+            votingResponse.setNo(votes.stream().filter(v -> v.getVote().equals(Vote.NO)).count());
+        } else {
+            votingResponse.setYes(0);
+            votingResponse.setNo(0);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(votingResponse);
     }
 
     @GetMapping("/sessions/voting/{sessionId}")
