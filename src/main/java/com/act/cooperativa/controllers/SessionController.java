@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,10 +50,14 @@ public class SessionController {
         }
 
         var associates = sessionModelOptional.get().getAssociates();
-        var associate = associates.stream().filter(a -> a.getAssociateId().equals(associateId)).findAny();
+        if(Objects.nonNull(associates)) {
+            var associate = associates.stream().filter(a -> a.getAssociateId().equals(associateId)).findAny();
 
-        if (associate.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("This member has already registered for this session.");
+            if (associate.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("This member has already registered for this session.");
+            }
+        } else {
+            associates = new ArrayList<>();
         }
 
         associates.add(associateModelOptional.get());

@@ -48,9 +48,9 @@ public class VotingControllerTest {
     void getVotingWithSuccess() throws Exception {
         var voting = new VotingModel();
         voting.setVotingId(UUID.fromString("e2f5a3bf-eb40-4bc9-bd22-4184ef763e97"));
-        voting.setInitPeriod(LocalDateTime.of(2023, 02, 20, 12, 00));
-        voting.setEndPeriod(LocalDateTime.of(2023, 02, 20, 12, 30));
-        voting.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
+        voting.setInitPeriod(LocalDateTime.of(2023, 2, 20, 12, 0));
+        voting.setEndPeriod(LocalDateTime.of(2023, 2, 20, 12, 30));
+        voting.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
 
         var sessionModel = new SessionModel();
         sessionModel.setName("É a favor do porte de armas?");
@@ -97,9 +97,9 @@ public class VotingControllerTest {
 
         var voting = new VotingModel();
         voting.setVotingId(UUID.fromString("e2f5a3bf-eb40-4bc9-bd22-4184ef763e97"));
-        voting.setInitPeriod(LocalDateTime.of(2023, 02, 20, 12, 00));
-        voting.setEndPeriod(LocalDateTime.of(2023, 02, 20, 12, 30));
-        voting.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
+        voting.setInitPeriod(LocalDateTime.of(2023, 2, 20, 12, 0));
+        voting.setEndPeriod(LocalDateTime.of(2023, 2, 20, 12, 30));
+        voting.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
 
         Mockito.when(sessionRepository.findById(Mockito.any())).thenReturn(Optional.of(sessionModel));
         Mockito.when(votingRepository.save(Mockito.any())).thenReturn(voting);
@@ -118,7 +118,7 @@ public class VotingControllerTest {
     void saveVoteWithSuccess() throws Exception {
         var associate = new AssociateModel();
         associate.setAssociateId(UUID.fromString("f7fbfb14-9b5e-4bca-b80a-d4ebd4cedb7f"));
-        associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
+        associate.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
         associate.setName("José");
         associate.setCpf("02069049086");
 

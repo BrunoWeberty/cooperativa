@@ -35,7 +35,7 @@ public class AssociateControllerTest {
     @Test
     void getAllAssociatesWithSuccess() throws Exception {
         var associate = new AssociateModel();
-        associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
+        associate.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
         associate.setName("José");
         associate.setCpf("02069049086");
         Mockito.when(associateRepository.findAll()).thenReturn(List.of(associate));
@@ -49,7 +49,7 @@ public class AssociateControllerTest {
     void getAssociateWithSuccess() throws Exception {
         var associate = new AssociateModel();
         associate.setAssociateId(UUID.fromString("fd82c6f2-8032-4800-b2d4-3a8fc26c3721"));
-        associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
+        associate.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
         associate.setName("José");
         associate.setCpf("02069049086");
         Mockito.when(associateRepository.findById(Mockito.any())).thenReturn(Optional.of(associate));
@@ -62,7 +62,7 @@ public class AssociateControllerTest {
     @Test
     void saveAssociateWithSuccess() throws Exception {
         var associate = new AssociateModel();
-        associate.setCreationDate(LocalDateTime.of(2023, 02, 20, 12, 00));
+        associate.setCreationDate(LocalDateTime.of(2023, 2, 20, 12, 0));
         associate.setName("José");
         associate.setCpf("02069049086");
         Mockito.when(associateRepository.save(Mockito.any())).thenReturn(associate);
